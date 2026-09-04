@@ -96,6 +96,7 @@
     </div>
 
     <div id="listArea"></div>
+    <pre id="debugBox" style="margin-top:20px; padding:10px; background:#fff3f3; border:1px solid var(--red); font-size:10px; white-space:pre-wrap; border-radius:8px;"></pre>
   </div>
 </main>
 
@@ -157,6 +158,9 @@ function loadData(){
 }
 
 function render(){
+  const dbg = document.getElementById("debugBox");
+  if(dbg) dbg.textContent = `총 파싱행: ${items.length}건\n예시:\n` + JSON.stringify(items.slice(0,3), null, 1);
+
   const methodF = document.getElementById("methodFilter").value;
   const search = document.getElementById("searchBox").value.trim();
 
