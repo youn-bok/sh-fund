@@ -96,14 +96,13 @@
     </div>
 
     <div id="listArea"></div>
-    <pre id="debugBox" style="margin-top:20px; padding:10px; background:#fff3f3; border:1px solid var(--red); font-size:10px; white-space:pre-wrap; border-radius:8px;"></pre>
   </div>
 </main>
 
 <script>
-const SHEET_ID = "1ukgI4pt6EuWGdGs7R9wCIAuDbdWcuH2c";
+const SHEET_ID = "1zwFOvLRkYoVuIUPbc6j6Bo__7FREp08BXkbMuVm_hJQ";
 const GID = "1332668387";
-const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}&_=${Date.now()}`;
+const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`;
 
 let items = [];
 let currentCompany = "SH";
@@ -158,9 +157,6 @@ function loadData(){
 }
 
 function render(){
-  const dbg = document.getElementById("debugBox");
-  if(dbg) dbg.textContent = `총 파싱행: ${items.length}건\n예시:\n` + JSON.stringify(items.slice(0,3), null, 1);
-
   const methodF = document.getElementById("methodFilter").value;
   const search = document.getElementById("searchBox").value.trim();
 
