@@ -96,13 +96,12 @@
     </div>
 
     <div id="listArea"></div>
-    <pre id="debugBox" style="margin-top:20px; padding:10px; background:#fff3f3; border:1px solid var(--red); font-size:10px; white-space:pre-wrap; border-radius:8px;">로딩 대기중...</pre>
   </div>
 </main>
 
 <script>
 const SHEET_ID = "1zwFOvLRkYoVuIUPbc6j6Bo__7FREp08BXkbMuVm_hJQ";
-const GID = "1332668387";
+const GID = "873216291";
 const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`;
 
 let items = [];
@@ -132,11 +131,6 @@ function loadData(){
   fetch(CSV_URL)
     .then(res => res.text())
     .then(text => {
-      const dbg = document.getElementById("debugBox");
-      if(dbg) dbg.textContent = `HTTP 응답 길이: ${text.length}자\nURL: ${CSV_URL}\n\n--- 앞부분 500자 ---\n` + text.slice(0,500);
-      document.getElementById("loadingView").style.display = "none";
-      document.getElementById("appView").style.display = "block";
-
       Papa.parse(text, {
         header:true, skipEmptyLines:true,
         complete: function(res){
@@ -153,16 +147,16 @@ function loadData(){
             note: (r["비고"]||"").trim(),
           })).filter(x => x.company && x.vendor);
           render();
+          document.getElementById("loadingView").style.display = "none";
+          document.getElementById("appView").style.display = "block";
         }
       });
     })
-    .catch(err => {
+    .catch(() => {
       document.getElementById("loadingView").style.display = "none";
       document.getElementById("errorView").style.display = "block";
-      document.getElementById("appView").style.display = "block";
-      document.getElementById("errorView").textContent = "요청 자체가 실패했어요.";
-      const dbg = document.getElementById("debugBox");
-      if(dbg) dbg.textContent = "fetch 에러: " + err.toString();
+      document.getElementById("errorView").textContent =
+        "데이터를 불러오지 못했어요. 구글시트 공유 설정을 확인해주세요.";
     });
 }
 
