@@ -129,41 +129,44 @@ function daysUntil(dayNum){
 }
 
 function loadData(){
-  Papa.parse(CSV_URL, {
-    download:true, header:true, skipEmptyLines:true,
-    complete: function(res){
-      items = res.data.map(r => ({
-        company: (r["회사구분"]||"").trim(),
-        day: (r["지급일"]||"").trim(),
-        method: (r["지급방법"]||"").trim(),
-        vendor: (r["거래처"]||"").trim(),
-        content: (r["내용"]||"").trim(),
-        bank: (r["은행"]||"").trim(),
-        account: (r["계좌번호"]||"").trim(),
-        payee: (r["예금주"]||"").trim(),
-        amount: (r["금액"]||"").trim(),
-        note: (r["비고"]||"").trim(),
-      })).filter(x => x.company && x.vendor);
-      render();
+  fetch(CSV_URL)
+    .then(res => res.text())
+    .then(text => {
+      const dbg = document.getElementById("debugBox");
+      if(dbg) dbg.textContent = `HTTP 응답 길이: ${text.length}자\nURL: ${CSV_URL}\n\n--- 앞부분 500자 ---\n` + text.slice(0,500);
       document.getElementById("loadingView").style.display = "none";
       document.getElementById("appView").style.display = "block";
-    },
-    error: function(err){
+
+      Papa.parse(text, {
+        header:true, skipEmptyLines:true,
+        complete: function(res){
+          items = res.data.map(r => ({
+            company: (r["회사구분"]||"").trim(),
+            day: (r["지급일"]||"").trim(),
+            method: (r["지급방법"]||"").trim(),
+            vendor: (r["거래처"]||"").trim(),
+            content: (r["내용"]||"").trim(),
+            bank: (r["은행"]||"").trim(),
+            account: (r["계좌번호"]||"").trim(),
+            payee: (r["예금주"]||"").trim(),
+            amount: (r["금액"]||"").trim(),
+            note: (r["비고"]||"").trim(),
+          })).filter(x => x.company && x.vendor);
+          render();
+        }
+      });
+    })
+    .catch(err => {
       document.getElementById("loadingView").style.display = "none";
       document.getElementById("errorView").style.display = "block";
-      document.getElementById("errorView").textContent =
-        "데이터를 불러오지 못했어요. 구글시트 공유 설정을 확인해주세요.";
       document.getElementById("appView").style.display = "block";
+      document.getElementById("errorView").textContent = "요청 자체가 실패했어요.";
       const dbg = document.getElementById("debugBox");
-      if(dbg) dbg.textContent = "에러 발생: " + JSON.stringify(err) + "\nURL: " + CSV_URL;
-    }
-  });
+      if(dbg) dbg.textContent = "fetch 에러: " + err.toString();
+    });
 }
 
 function render(){
-  const dbg = document.getElementById("debugBox");
-  if(dbg) dbg.textContent = `총 파싱행: ${items.length}건\nURL: ${CSV_URL}\n예시:\n` + JSON.stringify(items.slice(0,3), null, 1);
-
   const methodF = document.getElementById("methodFilter").value;
   const search = document.getElementById("searchBox").value.trim();
 
