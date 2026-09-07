@@ -102,7 +102,7 @@
 <script>
 const SHEET_ID = "1zwFOvLRkYoVuIUPbc6j6Bo__7FREp08BXkbMuVm_hJQ";
 const GID = "873216291";
-const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`;
+const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}&t=${Date.now()}`;
 
 let items = [];
 let currentCompany = "SH";
@@ -149,6 +149,10 @@ function loadData(){
           render();
           document.getElementById("loadingView").style.display = "none";
           document.getElementById("appView").style.display = "block";
+          const dbg = document.createElement("div");
+          dbg.style.cssText = "margin-top:20px;padding:10px;background:#fff3f3;border:1px solid #b3242d;font-size:10px;white-space:pre-wrap;border-radius:8px;";
+          dbg.textContent = `건수: ${items.length} / 원본행: ${res.data.length} / gid: ${GID}\n첫행 원본: ` + JSON.stringify(res.data[0]);
+          document.getElementById("listArea").after(dbg);
         }
       });
     })
