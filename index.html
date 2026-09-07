@@ -96,6 +96,7 @@
     </div>
 
     <div id="listArea"></div>
+    <pre id="debugBox" style="margin-top:20px; padding:10px; background:#fff3f3; border:1px solid var(--red); font-size:10px; white-space:pre-wrap; border-radius:8px;">로딩 대기중...</pre>
   </div>
 </main>
 
@@ -147,16 +148,22 @@ function loadData(){
       document.getElementById("loadingView").style.display = "none";
       document.getElementById("appView").style.display = "block";
     },
-    error: function(){
+    error: function(err){
       document.getElementById("loadingView").style.display = "none";
       document.getElementById("errorView").style.display = "block";
       document.getElementById("errorView").textContent =
         "데이터를 불러오지 못했어요. 구글시트 공유 설정을 확인해주세요.";
+      document.getElementById("appView").style.display = "block";
+      const dbg = document.getElementById("debugBox");
+      if(dbg) dbg.textContent = "에러 발생: " + JSON.stringify(err) + "\nURL: " + CSV_URL;
     }
   });
 }
 
 function render(){
+  const dbg = document.getElementById("debugBox");
+  if(dbg) dbg.textContent = `총 파싱행: ${items.length}건\nURL: ${CSV_URL}\n예시:\n` + JSON.stringify(items.slice(0,3), null, 1);
+
   const methodF = document.getElementById("methodFilter").value;
   const search = document.getElementById("searchBox").value.trim();
 
