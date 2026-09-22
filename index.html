@@ -149,6 +149,10 @@ function loadData(){
           render();
           document.getElementById("loadingView").style.display = "none";
           document.getElementById("appView").style.display = "block";
+          const dbg = document.createElement("div");
+          dbg.style.cssText = "margin:16px 0;padding:10px;background:#fff3f3;border:1px solid #b3242d;font-size:12px;border-radius:8px;";
+          dbg.textContent = `[진단] 불러온 항목: ${items.length}건 / gid: ${GID}`;
+          document.querySelector("main").prepend(dbg);
         }
       });
     })
